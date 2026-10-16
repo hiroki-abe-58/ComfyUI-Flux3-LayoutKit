@@ -1,8 +1,8 @@
-"""ComfyUI V3 nodes for FLUX 3 Image Klein layout tables that ComfyUI's own nodes do not cover.
+"""ComfyUI V3 nodes for the FLUX 3 Image Klein layout table: build, validate, convert and preview.
 
-ComfyUI itself ships ``Create Bounding Boxes`` (a drawing canvas) and ``FLUX 3 Image Layout Prompt``
-(text-to-image rows). These nodes add reference-image edit rows (add / move / keep / remove), a scale check
-that refuses 0-1 versus 0-1000 mix-ups, and a preview that draws source and target boxes.
+These are small utilities, not an editor. Drawing boxes is left to ComfyUI's own ``Create Bounding Boxes`` node
+(its ``elements`` output is accepted here) and to the community editors. The nodes write the same table text as the
+official reference code, refuse a 0-1 box given as 0-1000 (or the reverse), and export the official CLI ``--boxes`` file.
 """
 
 from __future__ import annotations

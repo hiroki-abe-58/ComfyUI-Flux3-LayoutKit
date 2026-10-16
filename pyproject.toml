@@ -1,6 +1,6 @@
 [project]
 name = "comfyui-flux3-layoutkit"
-description = "Unofficial ComfyUI nodes for FLUX 3 Image Klein layout tables: reference-image edit regions (add / move / keep / remove), a strict 0-1 vs 0-1000 box check, and a layout preview. Complements ComfyUI's built-in Create Bounding Boxes and FLUX 3 Image Layout Prompt nodes."
+description = "Small, strict FLUX 3 layout/bbox interoperability utilities for ComfyUI: 0-1 / 0-1000 conversion, strict validation of bbox / src_bbox / tgt_bbox / from rows, and parity tests against the official parser. Unofficial; not a bounding-box editor."
 version = "0.1.0"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
