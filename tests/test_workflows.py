@@ -7,6 +7,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
 API = sorted((ROOT / "workflows" / "api").glob("*.json"))
+DEMO = sorted((ROOT / "workflows" / "api" / "demo").glob("*.json"))
 
 # node types that exist in ComfyUI v0.41.0 and are used by the shipped workflows
 KNOWN = {
@@ -29,7 +30,7 @@ def test_workflows_exist():
     }
 
 
-@pytest.mark.parametrize("path", API, ids=lambda p: p.name)
+@pytest.mark.parametrize("path", API + DEMO, ids=lambda p: p.name)
 def test_links_point_at_real_nodes_and_known_types(path):
     graph = _load(path)
     for nid, node in graph.items():
@@ -40,7 +41,7 @@ def test_links_point_at_real_nodes_and_known_types(path):
                 assert isinstance(value[1], int) and value[1] >= 0
 
 
-@pytest.mark.parametrize("path", API, ids=lambda p: p.name)
+@pytest.mark.parametrize("path", API + DEMO, ids=lambda p: p.name)
 def test_our_node_inputs_match_their_schemas(path, comfy_dir):
     from flux3_layoutkit import nodes
 
@@ -88,6 +89,22 @@ def test_checked_in_workflows_equal_the_generator_output():
     spec.loader.exec_module(mod)
     for name, graph in mod.build().items():
         assert _load(ROOT / "workflows" / "api" / name) == graph, f"{name} is out of date; run scripts/make_workflows.py"
+
+
+def test_checked_in_demo_workflows_equal_the_generator_output():
+    import sys
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    try:
+        spec = importlib.util.spec_from_file_location("make_demo_workflows", ROOT / "scripts" / "make_demo_workflows.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+    finally:
+        sys.path.remove(str(ROOT / "scripts"))
+    built = mod.demos()
+    assert {p.name for p in DEMO} == set(built)
+    for name, graph in built.items():
+        assert _load(ROOT / "workflows" / "api" / "demo" / name) == graph, f"{name} is out of date; run scripts/make_demo_workflows.py"
 
 
 def test_no_absolute_local_paths_in_tracked_text():

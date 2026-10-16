@@ -1,0 +1,203 @@
+{
+  "20": {
+    "class_type": "Flux3LayoutRegion",
+    "inputs": {
+      "region_id": "obj_1",
+      "desc": "the large red and yellow striped hot-air balloon",
+      "operation": "move",
+      "scale": "canvas_1000",
+      "ref_index": 0,
+      "tgt_y_min": 480,
+      "tgt_x_min": 520,
+      "tgt_y_max": 880,
+      "tgt_x_max": 840,
+      "src_y_min": 80,
+      "src_x_min": 60,
+      "src_y_max": 480,
+      "src_x_max": 380
+    }
+  },
+  "21": {
+    "class_type": "Flux3LayoutRegion",
+    "inputs": {
+      "region_id": "obj_2",
+      "desc": "the small blue hot-air balloon stays where it is",
+      "operation": "keep",
+      "scale": "canvas_1000",
+      "ref_index": 0,
+      "tgt_y_min": 0,
+      "tgt_x_min": 0,
+      "tgt_y_max": 0,
+      "tgt_x_max": 0,
+      "src_y_min": 200,
+      "src_x_min": 620,
+      "src_y_max": 420,
+      "src_x_max": 800,
+      "regions": [
+        "20",
+        0
+      ]
+    }
+  },
+  "22": {
+    "class_type": "Flux3LayoutCompose",
+    "inputs": {
+      "prompt": "In <ref_image_0>, move the large red and yellow balloon <obj_1> from the upper left to the lower right, so the upper left sky is empty and there is only one red balloon; the small blue balloon <obj_2> stays where it is.",
+      "regions": [
+        "21",
+        0
+      ],
+      "require_citations": true
+    }
+  },
+  "23": {
+    "class_type": "EmptyFlux2LatentImage",
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    }
+  },
+  "24": {
+    "class_type": "Flux3LayoutPreview",
+    "inputs": {
+      "regions": [
+        "21",
+        0
+      ],
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  "25": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "24",
+        0
+      ]
+    }
+  },
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "flux3_image_klein_sd_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_4b_int8_convrot.safetensors",
+      "type": "flux3",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "text": [
+        "22",
+        0
+      ]
+    }
+  },
+  "5": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "flux3kit_ref_balloons.png"
+    }
+  },
+  "7": {
+    "class_type": "ReferenceMultiLatent",
+    "inputs": {
+      "positive": [
+        "4",
+        0
+      ],
+      "negative": [
+        "5",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "resolution": "resize",
+      "resolution.megapixels": 1.0,
+      "images.image0": [
+        "6",
+        0
+      ]
+    }
+  },
+  "8": {
+    "class_type": "KSampler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "7",
+        0
+      ],
+      "negative": [
+        "7",
+        1
+      ],
+      "latent_image": [
+        "7",
+        2
+      ],
+      "seed": 3,
+      "steps": 16,
+      "cfg": 1,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1
+    }
+  },
+  "9": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "8",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "10": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "9",
+        0
+      ],
+      "filename_prefix": "flux3_layoutkit_move"
+    }
+  }
+}
