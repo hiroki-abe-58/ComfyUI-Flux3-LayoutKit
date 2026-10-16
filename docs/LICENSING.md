@@ -12,6 +12,6 @@ Summary as read on 2026-10-17. This is not legal advice; read the upstream texts
 | `scripts/make_workflows.py` graph layout | original | Node types, widget values and file names follow the official `image_flux3_klein_distilled_*` templates of ComfyUI's workflow templates package; no template file is copied |
 
 * The MIT license of this repository does **not** extend to any model weights, and nothing here changes the FLUX Kommunity License.
-* This package does not download or redistribute weights and ships no generated images.
+* This package does not download or redistribute weights. The repository holds no generated images; the GitHub release attaches demo images generated with the weights by the repository author as validation evidence. They are not MIT-licensed and remain subject to the FLUX Kommunity License terms for outputs.
 * "FLUX", "Black Forest Labs" and "ComfyUI" are used only to name what the nodes work with.
 * Only publicly documented behaviour is relied on: the Diffusers blog post, the BFL reference repository and ComfyUI's source.

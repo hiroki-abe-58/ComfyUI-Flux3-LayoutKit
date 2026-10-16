@@ -11,5 +11,7 @@ tests/fixtures/upstream_to_canvas.json contains the output of src/flux3/bbox.py 
 https://github.com/black-forest-labs/flux-3-image-klein at commit e53f4ea697fe45db8f38fca91a90f5623f7f8f37,
 licensed under the Apache License 2.0 (Copyright Black Forest Labs). No code from that repository is copied.
 
-No model weights, generated images or upstream media are included. The FLUX 3 Image Klein weights are under the
-FLUX Kommunity License; see docs/LICENSING.md.
+The repository contains no model weights, images or upstream media. The GitHub release v0.1.0 attaches demo images that the
+repository author generated with the FLUX 3 Image Klein weights as validation evidence; they are not covered by the MIT license
+and remain subject to the FLUX Kommunity License terms for outputs. The weights themselves are under the FLUX Kommunity
+License and are not redistributed; see docs/LICENSING.md.
