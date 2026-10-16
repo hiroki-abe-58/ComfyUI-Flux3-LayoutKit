@@ -1,0 +1,91 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Model-free: no weights, no GPU, no network at test time beyond the pinned checkouts and pip.
+env:
+  BFL_COMMIT: e53f4ea697fe45db8f38fca91a90f5623f7f8f37 # black-forest-labs/flux-3-image-klein
+  COMFYUI_REF: v0.41.0
+  COMFYUI_COMMIT: 98cc0bf84b7cb1383654c5b402e7612d875d6d22
+  PYTHONDONTWRITEBYTECODE: "1"
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: ComfyUI-Flux3-LayoutKit
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Reference checkouts (pinned)
+        run: |
+          git -c core.autocrlf=false clone --quiet https://github.com/black-forest-labs/flux-3-image-klein.git refs/flux-3-image-klein
+          git -C refs/flux-3-image-klein checkout --quiet $env:BFL_COMMIT
+          if ((git -C refs/flux-3-image-klein rev-parse HEAD) -ne $env:BFL_COMMIT) { throw "flux-3-image-klein commit mismatch" }
+          git -c core.autocrlf=false clone --quiet --depth 1 --branch $env:COMFYUI_REF https://github.com/Comfy-Org/ComfyUI.git refs/ComfyUI
+          if ((git -C refs/ComfyUI rev-parse HEAD) -ne $env:COMFYUI_COMMIT) { throw "ComfyUI commit mismatch" }
+
+      - name: Install (ComfyUI environment, CPU)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu
+          pip install -r refs/ComfyUI/requirements.txt pytest==9.1.1 ruff==0.17.1
+          pip list
+
+      - name: Parity with the official reference code
+        run: python ComfyUI-Flux3-LayoutKit/scripts/check_upstream_parity.py refs/flux-3-image-klein --expect-commit $env:BFL_COMMIT
+
+      - name: Lint
+        run: |
+          Set-Location ComfyUI-Flux3-LayoutKit
+          ruff check --no-cache .
+          ruff format --check --no-cache .
+
+      - name: Tests (ComfyUI required, nothing may be skipped)
+        timeout-minutes: 15
+        env:
+          FLUX3_KIT_COMFYUI_DIR: ${{ github.workspace }}/refs/ComfyUI
+          FLUX3_KIT_REQUIRE_COMFYUI: "1"
+        run: |
+          Set-Location ComfyUI-Flux3-LayoutKit
+          python -m pytest tests -v -rs -p no:cacheprovider -o faulthandler_timeout=300
+
+      - name: Queue the model-free workflow on a real ComfyUI server (loopback, CPU)
+        timeout-minutes: 10
+        run: |
+          # a copy under a different folder name, as a clean install
+          New-Item -ItemType Directory -Force refs/ComfyUI/custom_nodes/flux3-layoutkit-clean | Out-Null
+          git -C ComfyUI-Flux3-LayoutKit archive HEAD | tar -x -C refs/ComfyUI/custom_nodes/flux3-layoutkit-clean
+          $log = Join-Path $PWD "server.log"
+          $p = Start-Process -FilePath python -ArgumentList @("main.py", "--cpu", "--listen", "127.0.0.1", "--port", "8213", "--disable-auto-launch", "--disable-api-nodes") -WorkingDirectory refs/ComfyUI -RedirectStandardOutput $log -RedirectStandardError "$log.err" -PassThru
+          try {
+            $ok = $false
+            foreach ($i in 1..90) {
+              try { Invoke-RestMethod http://127.0.0.1:8213/object_info/Flux3LayoutRegion | Out-Null; $ok = $true; break } catch { Start-Sleep 2 }
+            }
+            if (-not $ok) { Get-Content $log, "$log.err" -ErrorAction SilentlyContinue | Select-Object -Last 60; throw "server did not come up with the nodes registered" }
+            python ComfyUI-Flux3-LayoutKit/scripts/queue_prompt.py ComfyUI-Flux3-LayoutKit/workflows/api/layout_only_api.json --port 8213 --timeout 120
+            if ($LASTEXITCODE) { throw "queued workflow failed" }
+          } finally {
+            if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+          }

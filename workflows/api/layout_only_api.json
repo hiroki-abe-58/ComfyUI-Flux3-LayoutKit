@@ -1,0 +1,82 @@
+{
+  "20": {
+    "class_type": "Flux3LayoutRegion",
+    "inputs": {
+      "region_id": "obj_1",
+      "desc": "a red and yellow striped hot-air balloon",
+      "operation": "generate",
+      "scale": "canvas_1000",
+      "ref_index": 0,
+      "tgt_y_min": 80,
+      "tgt_x_min": 60,
+      "tgt_y_max": 480,
+      "tgt_x_max": 380,
+      "src_y_min": 0,
+      "src_x_min": 0,
+      "src_y_max": 0,
+      "src_x_max": 0
+    }
+  },
+  "21": {
+    "class_type": "Flux3LayoutRegion",
+    "inputs": {
+      "region_id": "obj_2",
+      "desc": "a small blue hot-air balloon",
+      "operation": "generate",
+      "scale": "unit_1",
+      "ref_index": 0,
+      "tgt_y_min": 0.2,
+      "tgt_x_min": 0.62,
+      "tgt_y_max": 0.42,
+      "tgt_x_max": 0.8,
+      "src_y_min": 0,
+      "src_x_min": 0,
+      "src_y_max": 0,
+      "src_x_max": 0,
+      "regions": [
+        "20",
+        0
+      ]
+    }
+  },
+  "22": {
+    "class_type": "Flux3LayoutCompose",
+    "inputs": {
+      "prompt": "hot-air balloons over a green valley at sunrise, <obj_1> on the left, <obj_2> on the right",
+      "regions": [
+        "21",
+        0
+      ],
+      "require_citations": true
+    }
+  },
+  "23": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": [
+        "22",
+        0
+      ]
+    }
+  },
+  "24": {
+    "class_type": "Flux3LayoutPreview",
+    "inputs": {
+      "regions": [
+        "21",
+        0
+      ],
+      "width": 1024,
+      "height": 1024
+    }
+  },
+  "25": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "24",
+        0
+      ]
+    }
+  }
+}

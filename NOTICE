@@ -1,0 +1,15 @@
+ComfyUI-Flux3-LayoutKit
+Copyright (c) 2026 hiroki-abe-58 (MIT, see LICENSE)
+
+This is an unofficial community integration. It is not affiliated with, sponsored by or endorsed by Black Forest Labs GmbH
+or Comfy-Org. "FLUX", "FLUX 3 Image Klein" and "Black Forest Labs" are used only to say which model the nodes work with.
+
+Third-party material
+--------------------
+tests/fixtures/upstream_to_canvas.json contains the output of src/flux3/bbox.py and two example box files
+(examples/inputs/balloons_boxes.json, examples/inputs/cactus_boxes.json) from
+https://github.com/black-forest-labs/flux-3-image-klein at commit e53f4ea697fe45db8f38fca91a90f5623f7f8f37,
+licensed under the Apache License 2.0 (Copyright Black Forest Labs). No code from that repository is copied.
+
+No model weights, generated images or upstream media are included. The FLUX 3 Image Klein weights are under the
+FLUX Kommunity License; see docs/LICENSING.md.

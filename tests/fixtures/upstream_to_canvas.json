@@ -1,0 +1,206 @@
+[
+ {
+  "source": "examples/inputs/balloons_boxes.json",
+  "input": [
+   {
+    "id": "obj_1",
+    "desc": "a red and yellow striped hot-air balloon",
+    "bbox": [
+     0.08,
+     0.06,
+     0.48,
+     0.38
+    ]
+   },
+   {
+    "id": "obj_2",
+    "desc": "a small blue hot-air balloon",
+    "bbox": [
+     0.2,
+     0.62,
+     0.42,
+     0.8
+    ]
+   }
+  ],
+  "canvas_rows": [
+   {
+    "id": "obj_1",
+    "bbox": [
+     80,
+     60,
+     480,
+     380
+    ],
+    "desc": "a red and yellow striped hot-air balloon"
+   },
+   {
+    "id": "obj_2",
+    "bbox": [
+     200,
+     620,
+     420,
+     800
+    ],
+    "desc": "a small blue hot-air balloon"
+   }
+  ]
+ },
+ {
+  "source": "examples/inputs/cactus_boxes.json",
+  "input": [
+   {
+    "id": "obj_1",
+    "desc": "a small potted cactus",
+    "from": "target",
+    "src_bbox": null,
+    "tgt_bbox": [
+     0.55,
+     0.62,
+     0.85,
+     0.85
+    ]
+   }
+  ],
+  "canvas_rows": [
+   {
+    "id": "obj_1",
+    "from": "target",
+    "src_bbox": null,
+    "tgt_bbox": [
+     550,
+     620,
+     850,
+     850
+    ],
+    "desc": "a small potted cactus"
+   }
+  ]
+ },
+ {
+  "source": "synthetic",
+  "input": [
+   {
+    "id": "a",
+    "desc": "x",
+    "bbox": [
+     0.125,
+     0.0625,
+     0.5,
+     0.9375
+    ]
+   }
+  ],
+  "canvas_rows": [
+   {
+    "id": "a",
+    "bbox": [
+     125,
+     62,
+     500,
+     938
+    ],
+    "desc": "x"
+   }
+  ]
+ },
+ {
+  "source": "synthetic",
+  "input": [
+   {
+    "id": "b",
+    "desc": "moved",
+    "from": "ref_image_0",
+    "src_bbox": [
+     0.5,
+     0.15,
+     0.85,
+     0.35
+    ],
+    "tgt_bbox": [
+     0.194,
+     0.055,
+     0.544,
+     0.255
+    ]
+   }
+  ],
+  "canvas_rows": [
+   {
+    "id": "b",
+    "from": "ref_image_0",
+    "src_bbox": [
+     500,
+     150,
+     850,
+     350
+    ],
+    "tgt_bbox": [
+     194,
+     55,
+     544,
+     255
+    ],
+    "desc": "moved"
+   }
+  ]
+ },
+ {
+  "source": "synthetic",
+  "input": [
+   {
+    "id": "c",
+    "desc": "removed",
+    "from": "ref_image_0",
+    "src_bbox": [
+     0.2,
+     0.2,
+     0.4,
+     0.4
+    ],
+    "tgt_bbox": null
+   }
+  ],
+  "canvas_rows": [
+   {
+    "id": "c",
+    "from": "ref_image_0",
+    "src_bbox": [
+     200,
+     200,
+     400,
+     400
+    ],
+    "tgt_bbox": null,
+    "desc": "removed"
+   }
+  ]
+ },
+ {
+  "source": "synthetic",
+  "input": [
+   {
+    "id": "d",
+    "desc": "rounding",
+    "bbox": [
+     0.0005,
+     0.0015,
+     0.0025,
+     0.0035
+    ]
+   }
+  ],
+  "canvas_rows": [
+   {
+    "id": "d",
+    "bbox": [
+     0,
+     2,
+     2,
+     4
+    ],
+    "desc": "rounding"
+   }
+  ]
+ }
+]

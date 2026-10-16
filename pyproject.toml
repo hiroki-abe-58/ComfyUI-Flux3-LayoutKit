@@ -1,0 +1,25 @@
+[project]
+name = "comfyui-flux3-layoutkit"
+description = "Unofficial ComfyUI nodes for FLUX 3 Image Klein layout tables: reference-image edit regions (add / move / keep / remove), a strict 0-1 vs 0-1000 box check, and a layout preview. Complements ComfyUI's built-in Create Bounding Boxes and FLUX 3 Image Layout Prompt nodes."
+version = "0.1.0"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/hiroki-abe-58/ComfyUI-Flux3-LayoutKit"
+
+[tool.comfy]
+PublisherId = "hiroki-abe-58"
+DisplayName = "FLUX 3 LayoutKit (unofficial)"
+Icon = ""
+
+[tool.ruff]
+line-length = 150
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

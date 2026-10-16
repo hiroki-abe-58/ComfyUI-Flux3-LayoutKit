@@ -1,0 +1,8 @@
+tests/
+.github/
+scripts/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+FLUX3_LAYOUTKIT_CURSOR_PROMPT.md
